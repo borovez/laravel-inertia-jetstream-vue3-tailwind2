@@ -21,11 +21,16 @@ InertiaProgress.init({
   showSpinner: false,
 });
 
-createApp({
+const App = createApp({
     render: () => h(app , {
         initialPage: JSON.parse(el.dataset.page),
-        resolveComponent: name => require(`./Pages/${name}`).default
+        resolveComponent: (name) =>
+                import(`@/Pages/${name}`).then((module) => module.default),
     }),
 })
-.use(plugin)
-.mount(el);
+
+App.use(plugin)
+
+App.mixin({ methods: { route } })
+
+const vm = App.mount(el);
